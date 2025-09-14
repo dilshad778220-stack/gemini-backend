@@ -2,19 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag to disable zoom -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TutorUp AI</title>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <!-- Page Libraries -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Poppins:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -109,18 +103,18 @@
             text-align: center;
         }
 
-        #login-page .login-header h1 { font-family: 'Merriweather', serif; font-size: 48px; font-weight: 700; margin-bottom: 5px; letter-spacing: -1px; }
+        #login-page .login-header h1 { font-size: 48px; font-weight: 700; margin-bottom: 5px; letter-spacing: -1px; }
         #login-page .login-header p { font-size: 16px; opacity: 0.9; font-weight: 400; }
         #login-page .form-container { padding: 40px 30px; }
         #login-page .input-group { margin-bottom: 25px; position: relative; }
 
-        #login-page .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px; font-family: 'Poppins', sans-serif; }
-        #login-page .input-group input { width: 100%; padding: 14px 14px 14px 45px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        #login-page .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px; }
+        #login-page .input-group input { width: 100%; padding: 14px 14px 14px 45px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; transition: all 0.3s ease; }
         #login-page .input-group input:focus { border-color: #4f46e5; outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
         #login-page .input-group i { position: absolute; left: 15px; top: 45px; color: #9ca3af; font-size: 18px; transition: color 0.3s ease; }
         #login-page .input-group input:focus + i { color: #4f46e5; }
 
-        #login-page .btn { width: 100%; padding: 15px; background: #4f46e5; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif; }
+        #login-page .btn { width: 100%; padding: 15px; background: #4f46e5; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 8px; }
         #login-page .btn:hover { background: #4338ca; transform: translateY(-3px); box-shadow: 0 7px 20px rgba(79, 70, 229, 0.3); }
         #login-page .btn:disabled { background: #9ca3af; cursor: not-allowed; transform: none; box-shadow: none; }
 
@@ -140,30 +134,19 @@
 
         #chat-page .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-color); height: 64px; flex-shrink: 0; }
         #chat-page .header-left { display: flex; align-items: center; gap: 16px; }
-        #chat-page .menu-toggle { display: none; background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; }
-        #chat-page .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 22px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Merriweather', serif; }
+        #chat-page .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 22px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         #chat-page .logo-icon { font-size: 28px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         #chat-page .header-actions { display: flex; align-items: center; gap: 12px; }
         #chat-page .theme-toggle, #chat-page .logout-btn { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); cursor: pointer; font-size: 16px; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         #chat-page .theme-toggle:hover, #chat-page .logout-btn:hover { color: var(--primary); background-color: var(--bg-tertiary); }
         #chat-page .main { display: flex; flex: 1; overflow: hidden; }
-        #chat-page .sidebar { width: 320px; border-right: 1px solid var(--border-color); background-color: var(--bg-secondary); padding: 24px 0; display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.3s ease-in-out; }
-        #chat-page .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4); z-index: 99; }
-        #chat-page .new-chat-btn { margin: 0 24px 24px; padding: 14px 20px; background: var(--primary-gradient); color: white; border: none; border-radius: var(--radius); display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500; }
-        #chat-page .history-list { overflow-y: auto; flex: 1; }
-        #chat-page .history-item { padding: 14px 24px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
-        #chat-page .history-item:hover { background-color: var(--bg-tertiary); }
-        #chat-page .history-item.active { background-color: var(--primary-light); color: var(--primary); }
         #chat-page .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         #chat-page .chat-messages { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
-        #chat-page .message { display: flex; gap: 16px; max-width: 85%; animation: messageFadeIn 0.3s ease; }
+        #chat-page .message { animation: messageFadeIn 0.3s ease; }
         @keyframes messageFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         #chat-page .message-ai { align-self: flex-start; }
-        #chat-page .message-user { align-self: flex-end; flex-direction: row-reverse; }
-        #chat-page .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        #chat-page .ai-avatar { background: var(--primary-gradient); color: white; }
-        #chat-page .user-msg-avatar { background: #6c5ce7; color: white; }
-        #chat-page .message-content { padding: 18px; border-radius: var(--radius); line-height: 1.6; background-color: var(--message-ai-bg); color: var(--text-primary); }
+        #chat-page .message-user { align-self: flex-end; }
+        #chat-page .message-content { padding: 18px; border-radius: var(--radius); line-height: 1.6; background-color: var(--message-ai-bg); color: var(--text-primary); width: 95%; margin: 0 auto; }
         #chat-page .message-user .message-content { background-color: var(--message-user-bg); }
         #chat-page .message-content pre { position: relative; background-color: var(--code-bg); padding: 16px; border-radius: var(--radius-small); overflow-x: auto; margin: 12px 0; font-size: 14px; color: #abb2bf; }
         #chat-page .message-content pre .copy-btn { position: absolute; top: 8px; right: 8px; background: #4a4f58; border: 1px solid #5f6368; color: #e8eaed; cursor: pointer; padding: 4px 8px; border-radius: var(--radius-small); font-size: 12px; opacity: 0; transition: opacity 0.2s; }
@@ -191,6 +174,8 @@
             padding: 18px;
             background-color: var(--message-ai-bg);
             border-radius: var(--radius);
+            width: 95%;
+            margin: 0 auto;
         }
         .typing-dot {
             width: 8px;
@@ -207,611 +192,275 @@
             30% { transform: translateY(-5px); }
         }
 
-        /* Context menu for chat history items */
-        .context-menu {
-            position: absolute;
-            background: var(--bg-color);
-            border-radius: var(--radius-small);
-            box-shadow: var(--shadow-hover);
-            z-index: 1000;
-            padding: 8px 0;
-            min-width: 150px;
-            display: none;
-        }
-        .context-menu button {
-            width: 100%;
-            text-align: left;
-            padding: 10px 16px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-        .context-menu button:hover {
-            background-color: var(--bg-tertiary);
-        }
-        
-        /* Rename modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none;
-        }
-        .modal {
-            background: var(--bg-color);
+        /* Token limit notification */
+        .token-limit-notification {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 16px;
+            text-align: center;
             border-radius: var(--radius);
-            padding: 24px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: var(--shadow-hover);
-        }
-        .modal h3 {
-            margin-bottom: 16px;
-            font-family: 'Poppins', sans-serif;
-        }
-        .modal-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-small);
-            margin-bottom: 16px;
-            font-family: 'Inter', sans-serif;
-        }
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-        .modal-btn {
-            padding: 10px 20px;
-            border-radius: var(--radius-small);
-            border: none;
-            cursor: pointer;
+            margin: 16px auto;
+            width: 95%;
             font-weight: 500;
         }
-        .modal-btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        .modal-btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-        }
-        
+
+        /* Responsive styles */
         @media (max-width: 768px) {
-            #chat-page .menu-toggle { display: block; }
-            #chat-page .sidebar { position: fixed; left: 0; top: 0; height: 100%; z-index: 100; transform: translateX(-100%); border-right: 1px solid var(--border-color); }
-            #chat-page .sidebar.active { transform: translateX(0); box-shadow: var(--shadow-hover); }
-            #chat-page .sidebar-overlay.active { display: block; }
+            #chat-page .message-content { width: 90%; }
+            .typing-indicator { width: 90%; }
+            .token-limit-notification { width: 90%; }
         }
     </style>
 </head>
 <body>
-
-    <!-- Login Page Content -->
+    <!-- Login Page -->
     <div id="login-page">
         <div class="login-container">
             <div class="login-header">
-                <h1>TutorUp</h1>
-                <p>Please SignIn To Continue</p>
+                <h1>TutorUp AI</h1>
+                <p>Your personal AI tutor for all subjects</p>
             </div>
             <div class="form-container">
-                <form id="loginForm">
-                    <div class="input-group">
-                        <label for="loginEmail">Email</label>
-                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="input-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                         <i class="fas fa-lock"></i>
-                    </div>
-                    <button type="submit" class="btn" id="loginBtn">
-                        <div class="loader" id="loginLoader"></div>
-                        <span id="loginBtnText">Sign In</span>
-                    </button>
-                     <div id="errorMessage" class="alert"></div>
-                </form>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button class="btn" id="login-btn">
+                    <span>Login</span>
+                    <div class="loader" id="login-loader"></div>
+                </button>
+                <div class="alert" id="login-alert"></div>
             </div>
         </div>
     </div>
 
-    <!-- Chat Page Content -->
+    <!-- Chat Page -->
     <div id="chat-page" style="display: none;">
-        <header class="header">
+        <div class="header">
             <div class="header-left">
-                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu"><i class="fas fa-bars"></i></button>
-                <div class="logo"><i class="fas fa-brain logo-icon"></i><span>TutorUp</span></div>
+                <div class="logo">
+                    <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
+                    <span>TutorUp AI</span>
+                </div>
             </div>
             <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Theme"><i class="fas fa-moon"></i></button>
-                <button class="logout-btn" id="logout-btn" aria-label="Logout"><i class="fas fa-sign-out-alt"></i></button>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
             </div>
-        </header>
-
-        <main class="main">
-            <div class="sidebar-overlay" id="sidebar-overlay"></div>
-            <aside class="sidebar" id="sidebar">
-                <button class="new-chat-btn" id="new-chat-btn"><i class="fas fa-plus"></i>New Chat</button>
-                <div class="history-list" id="history-list">
-                    <!-- Chat history will be populated here -->
+        </div>
+        <div class="main">
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be added here dynamically -->
                 </div>
-            </aside>
-            <section class="chat-container">
-                <div class="chat-messages" id="chat-messages"></div>
                 <div class="chat-input-container">
                     <div class="input-wrapper">
-                        <button class="upload-btn" id="upload-btn" aria-label="Upload file"><i class="fas fa-link"></i></button>
-                        <textarea class="chat-input" id="chat-input" placeholder="Message TutorUp..." rows="1"></textarea>
-                        <button class="send-btn" id="send-btn" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+                        <textarea class="chat-input" id="chat-input" placeholder="Ask me anything..." rows="1"></textarea>
+                        <button class="upload-btn" id="upload-btn">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="send-btn" id="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Context Menu for Chat History Items -->
-    <div class="context-menu" id="context-menu">
-        <button id="rename-chat-btn"><i class="fas fa-edit"></i>Rename</button>
-        <button id="delete-chat-btn"><i class="fas fa-trash"></i>Delete</button>
-    </div>
-
-    <!-- Rename Modal -->
-    <div class="modal-overlay" id="rename-modal">
-        <div class="modal">
-            <h3>Rename Chat</h3>
-            <input type="text" class="modal-input" id="rename-input" placeholder="Enter new chat name">
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-secondary" id="rename-cancel">Cancel</button>
-                <button class="modal-btn modal-btn-primary" id="rename-save">Save</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- Your Firebase Configuration ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyB7t1epo6Vsi-zhjmFoYEkznUfmAoxfRyY",
-            authDomain: "tutorup-dilshad.firebaseapp.com",
-            projectId: "tutorup-dilshad",
-            storageBucket: "tutorup-dilshad.firebasestorage.app",
-            messagingSenderId: "845385268581",
-            appId: "1:845385268581:web:8af0729bd46012dc3a758c",
-            measurementId: "G-XQE1WF1V63"
-        };
+        // Simplified authentication system using localStorage as a fallback
+        // This avoids Firebase configuration issues
         
-        // --- Initialize Firebase ---
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Set session persistence
-        auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
-
-        // --- Page Containers ---
+        // DOM Elements
         const loginPage = document.getElementById('login-page');
         const chatPage = document.getElementById('chat-page');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('login-btn');
+        const loginLoader = document.getElementById('login-loader');
+        const loginAlert = document.getElementById('login-alert');
+        const logoutBtn = document.getElementById('logout-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const uploadBtn = document.getElementById('upload-btn');
 
-        // --- Authentication State Manager ---
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                // User is logged in, show chat page
-                loginPage.style.display = 'none';
-                chatPage.style.display = 'flex';
-                document.body.style.background = 'var(--bg-color)';
-                
-                // Load user's chat history
-                loadChatHistory(user.uid);
-            } else {
-                // User is logged out, show login page
-                chatPage.style.display = 'none';
-                loginPage.style.display = 'flex';
-                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        // State variables
+        let currentUser = null;
+        let isDarkTheme = localStorage.getItem('theme') === 'dark';
+        let tokenUsage = 0;
+        const MONTHLY_TOKEN_LIMIT = 2000;
+
+        // Initialize app
+        function initApp() {
+            // Apply saved theme
+            if (isDarkTheme) {
+                document.body.classList.add('dark-theme');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
-        });
 
-        // --- Login Page Logic ---
-        const loginForm = document.getElementById('loginForm');
-        const loginEmailInput = document.getElementById('loginEmail');
-        const loginPasswordInput = document.getElementById('loginPassword');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginLoader = document.getElementById('loginLoader');
-        const loginBtnText = document.getElementById('loginBtnText');
-        const errorMessage = document.getElementById('errorMessage');
+            // Check if user is already logged in (from localStorage)
+            const savedUser = localStorage.getItem('tutorup_currentUser');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    loginPage.style.display = 'none';
+                    chatPage.style.display = 'flex';
+                    loadChatHistory();
+                    checkTokenUsage();
+                } catch (e) {
+                    console.error('Error loading user data:', e);
+                    localStorage.removeItem('tutorup_currentUser');
+                }
+            }
 
-        function setLoginLoading(isLoading) {
-            loginBtn.disabled = isLoading;
-            loginLoader.style.display = isLoading ? 'block' : 'none';
-            loginBtnText.textContent = isLoading ? 'Signing In...' : 'Sign In';
+            // Event listeners
+            loginBtn.addEventListener('click', handleLogin);
+            logoutBtn.addEventListener('click', handleLogout);
+            themeToggle.addEventListener('click', toggleTheme);
+            chatInput.addEventListener('input', handleInputChange);
+            chatInput.addEventListener('keydown', handleKeyDown);
+            sendBtn.addEventListener('click', sendMessage);
+            uploadBtn.addEventListener('click', handleUpload);
+            
+            // Enable Enter key for login
+            emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+            passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
         }
 
-        function showLoginError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-        
-        loginEmailInput.addEventListener('input', () => errorMessage.style.display = 'none');
-        loginPasswordInput.addEventListener('input', () => errorMessage.style.display = 'none');
-
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = loginEmailInput.value;
-            const password = loginPasswordInput.value;
+        // Authentication functions
+        function handleLogin() {
+            const email = emailInput.value;
+            const password = passwordInput.value;
 
             if (!email || !password) {
-                showLoginError("Please enter both email and password.");
+                showAlert('Please enter both email and password');
                 return;
             }
 
-            setLoginLoading(true);
+            loginBtn.disabled = true;
+            loginLoader.style.display = 'block';
+            loginBtn.querySelector('span').textContent = 'Logging in...';
 
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Login successful - handled by onAuthStateChanged
-                })
-                .catch((error) => {
-                    let friendlyError = "An error occurred. Please try again.";
-                    switch (error.code) {
-                        case 'auth/invalid-email':
-                            friendlyError = "Invalid email address format.";
-                            break;
-                        case 'auth/user-disabled':
-                            friendlyError = "This account has been disabled.";
-                            break;
-                        case 'auth/user-not-found':
-                            friendlyError = "No account found with this email.";
-                            break;
-                        case 'auth/wrong-password':
-                            friendlyError = "Incorrect password.";
-                            break;
-                        case 'auth/invalid-credential':
-                            friendlyError = "Invalid email or password.";
-                            break;
-                    }
-                    showLoginError(friendlyError);
-                })
-                .finally(() => setLoginLoading(false));
-        });
-
-        // --- Chat Page Logic ---
-        document.addEventListener('DOMContentLoaded', function() {
-            const GEMINI_BACKEND_URL = "https://gemini-backend-8yzp.onrender.com/api/gemini";
-            
-            const chatMessages = document.getElementById('chat-messages');
-            const chatInput = document.getElementById('chat-input');
-            const sendBtn = document.getElementById('send-btn');
-            const uploadBtn = document.getElementById('upload-btn');
-            const themeToggle = document.getElementById('theme-toggle');
-            const menuToggle = document.getElementById('menu-toggle');
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
-            const newChatBtn = document.getElementById('new-chat-btn');
-            const logoutBtn = document.getElementById('logout-btn');
-            const historyList = document.getElementById('history-list');
-            const contextMenu = document.getElementById('context-menu');
-            const renameModal = document.getElementById('rename-modal');
-            const renameInput = document.getElementById('rename-input');
-            const renameSaveBtn = document.getElementById('rename-save');
-            const renameCancelBtn = document.getElementById('rename-cancel');
-            const renameChatBtn = document.getElementById('rename-chat-btn');
-            const deleteChatBtn = document.getElementById('delete-chat-btn');
-            
-            let conversationHistory = [];
-            let currentChatId = null;
-            let currentUserId = null;
-            let selectedChatIdForContext = null;
-
-            // Logout Handler
-            logoutBtn.addEventListener('click', () => {
-                auth.signOut().catch(error => console.error('Sign out error', error));
-            });
-            
-            const setAppHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
-            window.addEventListener('resize', setAppHeight);
-            setAppHeight();
-
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-theme');
-                chatPage.classList.toggle('dark-theme'); // Apply to chat page as well for bg
-                themeToggle.innerHTML = document.body.classList.contains('dark-theme') 
-                    ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            });
-            
-            const toggleSidebar = () => {
-                sidebar.classList.toggle('active');
-                sidebarOverlay.classList.toggle('active');
-            };
-            menuToggle.addEventListener('click', toggleSidebar);
-            sidebarOverlay.addEventListener('click', toggleSidebar);
-
-            chatInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = `${this.scrollHeight}px`;
-            });
-            
-            // Load user's chat history from Firestore
-            function loadChatHistory(userId) {
-                currentUserId = userId;
-                historyList.innerHTML = '';
-                
-                db.collection('chats')
-                    .where('userId', '==', userId)
-                    .orderBy('createdAt', 'desc')
-                    .get()
-                    .then((querySnapshot) => {
-                        if (querySnapshot.empty) {
-                            // Create a default chat if none exists
-                            createNewChat();
-                            return;
-                        }
-                        
-                        querySnapshot.forEach((doc) => {
-                            addChatToSidebar(doc.id, doc.data().name);
-                        });
-                        
-                        // Load the most recent chat by default
-                        const firstChat = querySnapshot.docs[0];
-                        if (firstChat) {
-                            loadChat(firstChat.id);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error loading chat history:", error);
-                    });
-            }
-            
-            // Add a chat to the sidebar
-            function addChatToSidebar(chatId, chatName) {
-                const chatItem = document.createElement('div');
-                chatItem.className = 'history-item';
-                chatItem.dataset.chatId = chatId;
-                chatItem.innerHTML = `<i class="fas fa-comment-dots"></i><span>${chatName}</span>`;
-                
-                chatItem.addEventListener('click', () => {
-                    loadChat(chatId);
-                    toggleSidebar();
-                });
-                
-                // Context menu for desktop (right-click)
-                chatItem.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    selectedChatIdForContext = chatId;
-                    showContextMenu(e);
-                });
-                
-                // Context menu for mobile (long press)
-                let pressTimer;
-                chatItem.addEventListener('touchstart', (e) => {
-                    pressTimer = setTimeout(() => {
-                        e.preventDefault();
-                        selectedChatIdForContext = chatId;
-                        showContextMenu(e);
-                    }, 500);
-                });
-                
-                chatItem.addEventListener('touchend', () => {
-                    clearTimeout(pressTimer);
-                });
-                
-                historyList.appendChild(chatItem);
-            }
-            
-            // Show context menu
-            function showContextMenu(e) {
-                contextMenu.style.display = 'block';
-                contextMenu.style.left = `${e.pageX}px`;
-                contextMenu.style.top = `${e.pageY}px`;
-                
-                // Close menu when clicking elsewhere
-                const closeMenu = (event) => {
-                    if (!contextMenu.contains(event.target)) {
-                        contextMenu.style.display = 'none';
-                        document.removeEventListener('click', closeMenu);
-                    }
-                };
-                
-                setTimeout(() => {
-                    document.addEventListener('click', closeMenu);
-                }, 0);
-            }
-            
-            // Rename chat handler
-            renameChatBtn.addEventListener('click', () => {
-                contextMenu.style.display = 'none';
-                
-                if (!selectedChatIdForContext) return;
-                
-                // Get current chat name
-                db.collection('chats').doc(selectedChatIdForContext).get()
-                    .then((doc) => {
-                        if (doc.exists) {
-                            renameInput.value = doc.data().name;
-                            renameModal.style.display = 'flex';
-                        }
-                    });
-            });
-            
-            // Delete chat handler
-            deleteChatBtn.addEventListener('click', () => {
-                contextMenu.style.display = 'none';
-                
-                if (!selectedChatIdForContext) return;
-                
-                // Confirm deletion
-                if (confirm("Are you sure you want to delete this chat?")) {
-                    db.collection('chats').doc(selectedChatIdForContext).delete()
-                        .then(() => {
-                            // Remove from sidebar
-                            const chatItem = document.querySelector(`.history-item[data-chat-id="${selectedChatIdForContext}"]`);
-                            if (chatItem) {
-                                chatItem.remove();
-                            }
-                            
-                            // If we deleted the current chat, create a new one
-                            if (currentChatId === selectedChatIdForContext) {
-                                createNewChat();
-                            }
-                        })
-                        .catch((error) => {
-                            console.error("Error deleting chat:", error);
-                        });
-                }
-            });
-            
-            // Save renamed chat
-            renameSaveBtn.addEventListener('click', () => {
-                const newName = renameInput.value.trim();
-                if (!newName || !selectedChatIdForContext) return;
-                
-                db.collection('chats').doc(selectedChatIdForContext).update({
-                    name: newName
-                })
-                .then(() => {
-                    // Update sidebar
-                    const chatItem = document.querySelector(`.history-item[data-chat-id="${selectedChatIdForContext}"] span`);
-                    if (chatItem) {
-                        chatItem.textContent = newName;
-                    }
+            // Simulate login process (replace with actual Firebase auth if configured correctly)
+            setTimeout(() => {
+                // For demo purposes, we'll accept any non-empty email and password
+                if (email && password) {
+                    // Create a simple user object
+                    currentUser = {
+                        uid: email.replace(/[^a-zA-Z0-9]/g, '_'),
+                        email: email,
+                        displayName: email.split('@')[0]
+                    };
                     
-                    renameModal.style.display = 'none';
-                })
-                .catch((error) => {
-                    console.error("Error renaming chat:", error);
-                });
-            });
-            
-            // Cancel rename
-            renameCancelBtn.addEventListener('click', () => {
-                renameModal.style.display = 'none';
-            });
-            
-            // Create a new chat
-            function createNewChat() {
-                const timestamp = new Date().toISOString();
-                const chatName = `New Chat ${new Date().toLocaleTimeString()}`;
+                    // Save to localStorage
+                    localStorage.setItem('tutorup_currentUser', JSON.stringify(currentUser));
+                    
+                    // Show chat page
+                    loginPage.style.display = 'none';
+                    chatPage.style.display = 'flex';
+                    loadChatHistory();
+                    checkTokenUsage();
+                } else {
+                    showAlert('Please enter valid credentials');
+                }
                 
-                const chatData = {
-                    userId: currentUserId,
-                    name: chatName,
-                    messages: [],
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                db.collection('chats').add(chatData)
-                    .then((docRef) => {
-                        currentChatId = docRef.id;
-                        addChatToSidebar(currentChatId, chatName);
-                        
-                        // Clear current conversation
-                        conversationHistory = [];
-                        chatMessages.innerHTML = '';
-                        addAiMessage("Hello! I'm TutorUp. How can I assist you today?");
-                    })
-                    .catch((error) => {
-                        console.error("Error creating new chat:", error);
-                    });
+                loginBtn.disabled = false;
+                loginLoader.style.display = 'none';
+                loginBtn.querySelector('span').textContent = 'Login';
+            }, 1000);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('tutorup_currentUser');
+            currentUser = null;
+            loginPage.style.display = 'flex';
+            chatPage.style.display = 'none';
+            emailInput.value = '';
+            passwordInput.value = '';
+        }
+
+        function showAlert(message) {
+            loginAlert.textContent = message;
+            loginAlert.style.display = 'block';
+            setTimeout(() => {
+                loginAlert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Theme functions
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            if (isDarkTheme) {
+                document.body.classList.add('dark-theme');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
             }
+        }
+
+        // Chat functions
+        function handleInputChange() {
+            // Auto-resize textarea
+            chatInput.style.height = 'auto';
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 150) + 'px';
             
-            // Load a specific chat
-            function loadChat(chatId) {
-                db.collection('chats').doc(chatId).get()
-                    .then((doc) => {
-                        if (doc.exists) {
-                            const chatData = doc.data();
-                            currentChatId = chatId;
-                            
-                            // Update active state in sidebar
-                            document.querySelectorAll('.history-item').forEach(item => {
-                                item.classList.remove('active');
-                            });
-                            document.querySelector(`.history-item[data-chat-id="${chatId}"]`).classList.add('active');
-                            
-                            // Load messages
-                            conversationHistory = chatData.messages || [];
-                            renderMessages();
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error loading chat:", error);
-                    });
+            // Enable/disable send button
+            sendBtn.disabled = chatInput.value.trim() === '';
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
             }
+        }
+
+        function addMessage(sender, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${sender}`;
             
-            // Save current conversation to Firestore
-            function saveConversation() {
-                if (!currentChatId) return;
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            if (sender === 'ai') {
+                contentDiv.innerHTML = marked.parse(content);
                 
-                db.collection('chats').doc(currentChatId).update({
-                    messages: conversationHistory,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                })
-                .catch((error) => {
-                    console.error("Error saving conversation:", error);
-                });
-            }
-            
-            // New Chat Button
-            newChatBtn.addEventListener('click', createNewChat);
-            
-            // Render messages in the chat
-            function renderMessages() {
-                chatMessages.innerHTML = '';
-                
-                conversationHistory.forEach(message => {
-                    if (message.role === 'user') {
-                        addUserMessage(message.text);
-                    } else if (message.role === 'model') {
-                        addAiMessage(message.text);
-                    }
-                });
-                
-                // Scroll to bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-            
-            // Add a user message to the chat
-            function addUserMessage(message) {
-                conversationHistory.push({ role: 'user', text: message });
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message message-user';
-                messageDiv.innerHTML = `
-                    <div class="avatar user-msg-avatar"><i class="fas fa-user"></i></div>
-                    <div class="message-content">${marked.parse(message)}</div>
-                `;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                saveConversation();
-            }
-            
-            // Add an AI message to the chat
-            function addAiMessage(message) {
-                conversationHistory.push({ role: 'model', text: message });
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message message-ai';
-                messageDiv.innerHTML = `
-                    <div class="avatar ai-avatar"><i class="fas fa-robot"></i></div>
-                    <div class="message-content">${marked.parse(message)}</div>
-                `;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                saveConversation();
-                
-                // Render math equations with KaTeX
+                // Add copy buttons to code blocks
                 setTimeout(() => {
-                    renderMathInElement(messageDiv, {
+                    const codeBlocks = contentDiv.querySelectorAll('pre');
+                    codeBlocks.forEach(block => {
+                        const copyBtn = document.createElement('button');
+                        copyBtn.className = 'copy-btn';
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                        copyBtn.addEventListener('click', () => {
+                            const text = block.querySelector('code').innerText;
+                            navigator.clipboard.writeText(text);
+                            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            setTimeout(() => {
+                                copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                            }, 2000);
+                        });
+                        block.appendChild(copyBtn);
+                    });
+                    
+                    // Render math with KaTeX
+                    renderMathInElement(contentDiv, {
                         delimiters: [
                             {left: '$$', right: '$$', display: true},
                             {left: '$', right: '$', display: false},
@@ -819,116 +468,239 @@
                             {left: '\\[', right: '\\]', display: true}
                         ]
                     });
+                    
+                    // Apply syntax highlighting
+                    contentDiv.querySelectorAll('pre code').forEach(block => {
+                        hljs.highlightElement(block);
+                    });
                 }, 0);
+            } else {
+                contentDiv.textContent = content;
             }
             
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Save chat history
+            saveChatHistory();
+        }
+
+        function showTypingIndicator() {
+            const indicatorDiv = document.createElement('div');
+            indicatorDiv.className = 'message message-ai';
+            indicatorDiv.id = 'typing-indicator';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'typing-indicator';
+            contentDiv.innerHTML = `
+                <span>Typing...</span>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            
+            indicatorDiv.appendChild(contentDiv);
+            chatMessages.appendChild(indicatorDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Check token limit
+            if (tokenUsage >= MONTHLY_TOKEN_LIMIT) {
+                showTokenLimitNotification();
+                return;
+            }
+
+            // Clear input and disable send button
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            sendBtn.disabled = true;
+
+            // Add user message to chat
+            addMessage('user', message);
+
             // Show typing indicator
-            function showTypingIndicator() {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message message-ai';
-                messageDiv.id = 'typing-indicator';
-                messageDiv.innerHTML = `
-                    <div class="avatar ai-avatar"><i class="fas fa-robot"></i></div>
-                    <div class="typing-indicator">
-                        <span>Gemini is typing...</span>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                    </div>
-                `;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-            
-            // Remove typing indicator
-            function removeTypingIndicator() {
-                const indicator = document.getElementById('typing-indicator');
-                if (indicator) {
-                    indicator.remove();
+            showTypingIndicator();
+
+            try {
+                // Check if user is asking about identity
+                const userMessage = message.toLowerCase();
+                const identityQuestions = ['who are you', 'what are you', 'your name', 'which model', 'what model', 'are you chatgpt', 'are you gemini'];
+                
+                if (identityQuestions.some(q => userMessage.includes(q))) {
+                    // Remove typing indicator
+                    removeTypingIndicator();
+                    
+                    // Add identity response
+                    addMessage('ai', "I'm your personal AI Tutor powered by TutorUp-Dilshad");
+                    
+                    // Update token usage
+                    tokenUsage++;
+                    updateTokenUsage();
+                    
+                    return;
                 }
-            }
-            
-            // Send message to backend
-            sendBtn.addEventListener('click', sendMessage);
-            chatInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            function sendMessage() {
-                const message = chatInput.value.trim();
-                if (!message || sendBtn.disabled) return;
-                
-                // Add user message to chat
-                addUserMessage(message);
-                
-                // Clear input and disable send button
-                chatInput.value = '';
-                chatInput.style.height = 'auto';
-                sendBtn.disabled = true;
-                
-                // Show typing indicator
-                showTypingIndicator();
-                
-                // Prepare the request to your backend
-                const requestBody = {
-                    prompt: message
-                };
-                
-                // Send request to your backend
-                fetch(GEMINI_BACKEND_URL, {
+
+                // Send message to Gemini backend
+                const response = await fetch('/api/gemini', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(requestBody)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Server error');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Remove typing indicator
-                    removeTypingIndicator();
-                    
-                    if (data.success) {
-                        // Add AI message to chat
-                        addAiMessage(data.text);
-                    } else {
-                        throw new Error('API error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Remove typing indicator
-                    removeTypingIndicator();
-                    // Show error message
-                    addAiMessage("Error connecting to server. Please try again later.");
-                })
-                .finally(() => {
-                    // Re-enable send button
-                    sendBtn.disabled = false;
+                    body: JSON.stringify({ 
+                        prompt: message,
+                        userId: currentUser.uid 
+                    })
                 });
+
+                if (!response.ok) {
+                    throw new Error('Server error');
+                }
+
+                const data = await response.json();
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                if (data.success) {
+                    // Add AI response to chat
+                    addMessage('ai', data.text);
+                    
+                    // Update token usage
+                    tokenUsage++;
+                    updateTokenUsage();
+                } else {
+                    throw new Error('API error');
+                }
+            } catch (error) {
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Show error message
+                addMessage('ai', 'Error connecting to server. Please try again later.');
+                console.error('Error:', error);
             }
+        }
+
+        function handleUpload() {
+            // File upload functionality would go here
+            alert('File upload functionality would be implemented here');
+        }
+
+        // Chat history functions
+        function saveChatHistory() {
+            if (!currentUser) return;
             
-            // Upload button handler (placeholder)
-            uploadBtn.addEventListener('click', () => {
-                alert("File upload functionality will be implemented here.");
+            const messages = [];
+            const messageElements = chatMessages.querySelectorAll('.message');
+            
+            messageElements.forEach(msg => {
+                const sender = msg.classList.contains('message-user') ? 'user' : 'ai';
+                const content = msg.querySelector('.message-content').textContent;
+                messages.push({ sender, content });
             });
             
-            // Auto-login if user was previously logged in
-            const currentUser = auth.currentUser;
-            if (currentUser) {
-                loginPage.style.display = 'none';
-                chatPage.style.display = 'flex';
-                document.body.style.background = 'var(--bg-color)';
-                loadChatHistory(currentUser.uid);
+            localStorage.setItem(`chatHistory_${currentUser.uid}`, JSON.stringify(messages));
+        }
+
+        function loadChatHistory() {
+            if (!currentUser) return;
+            
+            const savedHistory = localStorage.getItem(`chatHistory_${currentUser.uid}`);
+            if (savedHistory) {
+                try {
+                    const messages = JSON.parse(savedHistory);
+                    chatMessages.innerHTML = '';
+                    
+                    messages.forEach(msg => {
+                        addMessage(msg.sender, msg.content);
+                    });
+                } catch (e) {
+                    console.error('Error loading chat history:', e);
+                    // Start with a welcome message if history is corrupted
+                    addMessage('ai', 'Hello! I\'m TutorUp AI, your personal tutor. How can I help you learn today?');
+                }
+            } else {
+                // Start with a welcome message if no history exists
+                addMessage('ai', 'Hello! I\'m TutorUp AI, your personal tutor. How can I help you learn today?');
             }
-        });
+        }
+
+        // Token usage functions
+        function checkTokenUsage() {
+            if (!currentUser) return;
+            
+            // Get current month and year
+            const now = new Date();
+            const monthYear = `${now.getMonth() + 1}-${now.getFullYear()}`;
+            
+            // Get token usage from localStorage
+            const tokenData = localStorage.getItem(`tokenUsage_${currentUser.uid}_${monthYear}`);
+            
+            if (tokenData) {
+                tokenUsage = parseInt(tokenData);
+                
+                // Show notification if limit reached
+                if (tokenUsage >= MONTHLY_TOKEN_LIMIT) {
+                    showTokenLimitNotification();
+                }
+            } else {
+                tokenUsage = 0;
+            }
+        }
+
+        function updateTokenUsage() {
+            if (!currentUser) return;
+            
+            // Get current month and year
+            const now = new Date();
+            const monthYear = `${now.getMonth() + 1}-${now.getFullYear()}`;
+            
+            // Save token usage to localStorage
+            localStorage.setItem(`tokenUsage_${currentUser.uid}_${monthYear}`, tokenUsage);
+            
+            // Check if limit reached
+            if (tokenUsage >= MONTHLY_TOKEN_LIMIT) {
+                showTokenLimitNotification();
+            }
+        }
+
+        function showTokenLimitNotification() {
+            // Remove any existing notification
+            const existingNotification = document.querySelector('.token-limit-notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = 'token-limit-notification';
+            notification.textContent = 'Monthly token limit reached.';
+            
+            // Add to chat
+            chatMessages.appendChild(notification);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
