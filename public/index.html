@@ -204,11 +204,140 @@
             font-weight: 500;
         }
 
-        /* Responsive styles */
+        /* File upload modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal {
+            background-color: var(--bg-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .file-input-container {
+            margin-bottom: 20px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 40px 20px;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .file-input-label:hover {
+            border-color: var(--primary);
+        }
+
+        .file-input-label i {
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .file-input-label span {
+            display: block;
+            color: var(--text-secondary);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .selected-file {
+            margin-top: 16px;
+            padding: 12px;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-small);
+            display: none;
+        }
+
+        .selected-file i {
+            margin-right: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-small);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .modal-btn-cancel {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: none;
+        }
+
+        .modal-btn-upload {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+        }
+
+        /* Responsive design */
         @media (max-width: 768px) {
-            #chat-page .message-content { width: 90%; }
-            .typing-indicator { width: 90%; }
-            .token-limit-notification { width: 90%; }
+            #login-page .login-container { max-width: 100%; }
+            #login-page .login-header { padding: 30px 20px; }
+            #login-page .form-container { padding: 30px 20px; }
+            #chat-page .header { padding: 12px 16px; }
+            #chat-page .chat-messages { padding: 16px; }
+            #chat-page .chat-input-container { padding: 16px; }
+            #chat-page .message-content { width: 100%; }
+        }
+
+        /* Detailed answer toggle */
+        .detailed-toggle {
+            display: inline-block;
+            margin-top: 12px;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -222,20 +351,20 @@
             </div>
             <div class="form-container">
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="Enter your email">
-                    <i class="fas fa-envelope"></i>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                    <i class="fas fa-user"></i>
                 </div>
                 <div class="input-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="Enter your password">
                     <i class="fas fa-lock"></i>
                 </div>
-                <button class="btn" id="login-btn">
-                    <span>Login</span>
+                <button id="login-btn" class="btn">
+                    <span>Log In</span>
                     <div class="loader" id="login-loader"></div>
                 </button>
-                <div class="alert" id="login-alert"></div>
+                <div class="alert" id="login-alert">Invalid username or password</div>
             </div>
         </div>
     </div>
@@ -250,10 +379,10 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle">
+                <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
-                <button class="logout-btn" id="logout-btn">
+                <button class="logout-btn" id="logout-btn" title="Log out">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
@@ -261,15 +390,19 @@
         <div class="main">
             <div class="chat-container">
                 <div class="chat-messages" id="chat-messages">
-                    <!-- Messages will be added here dynamically -->
+                    <div class="message message-ai">
+                        <div class="message-content">
+                            <p>Hello! I'm your AI tutor. How can I help you with your studies today?</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="chat-input-container">
                     <div class="input-wrapper">
-                        <textarea class="chat-input" id="chat-input" placeholder="Ask me anything..." rows="1"></textarea>
-                        <button class="upload-btn" id="upload-btn">
+                        <button class="upload-btn" id="upload-btn" title="Upload file">
                             <i class="fas fa-paperclip"></i>
                         </button>
-                        <button class="send-btn" id="send-btn">
+                        <textarea class="chat-input" id="chat-input" placeholder="Ask me anything..." rows="1"></textarea>
+                        <button class="send-btn" id="send-btn" disabled>
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
@@ -278,429 +411,434 @@
         </div>
     </div>
 
+    <!-- File Upload Modal -->
+    <div class="modal-overlay" id="upload-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload File</h3>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="file-input-container">
+                <label for="file-input" class="file-input-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Click to browse or drag & drop your file</span>
+                </label>
+                <input type="file" id="file-input" class="file-input">
+                <div class="selected-file" id="selected-file">
+                    <i class="fas fa-file"></i>
+                    <span id="file-name"></span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" id="cancel-upload">Cancel</button>
+                <button class="modal-btn modal-btn-upload" id="confirm-upload" disabled>Upload</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Simplified authentication system using localStorage as a fallback
-        // This avoids Firebase configuration issues
-        
         // DOM Elements
         const loginPage = document.getElementById('login-page');
         const chatPage = document.getElementById('chat-page');
-        const emailInput = document.getElementById('email');
+        const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
         const loginBtn = document.getElementById('login-btn');
         const loginLoader = document.getElementById('login-loader');
         const loginAlert = document.getElementById('login-alert');
-        const logoutBtn = document.getElementById('logout-btn');
-        const themeToggle = document.getElementById('theme-toggle');
-        const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
         const sendBtn = document.getElementById('send-btn');
+        const chatMessages = document.getElementById('chat-messages');
+        const themeToggle = document.getElementById('theme-toggle');
+        const logoutBtn = document.getElementById('logout-btn');
         const uploadBtn = document.getElementById('upload-btn');
+        const uploadModal = document.getElementById('upload-modal');
+        const fileInput = document.getElementById('file-input');
+        const fileName = document.getElementById('file-name');
+        const selectedFile = document.getElementById('selected-file');
+        const confirmUpload = document.getElementById('confirm-upload');
+        const cancelUpload = document.getElementById('cancel-upload');
+        const modalClose = document.getElementById('modal-close');
 
         // State variables
-        let currentUser = null;
-        let isDarkTheme = localStorage.getItem('theme') === 'dark';
-        let tokenUsage = 0;
-        const MONTHLY_TOKEN_LIMIT = 2000;
+        let isDarkTheme = localStorage.getItem('darkTheme') === 'true';
+        let messageHistory = [];
 
-        // Initialize app
-        function initApp() {
-            // Apply saved theme
-            if (isDarkTheme) {
-                document.body.classList.add('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        // Initialize the app
+        function init() {
+            // Check if user is already logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                showChatPage();
             }
 
-            // Check if user is already logged in (from localStorage)
-            const savedUser = localStorage.getItem('tutorup_currentUser');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    loginPage.style.display = 'none';
-                    chatPage.style.display = 'flex';
-                    loadChatHistory();
-                    checkTokenUsage();
-                } catch (e) {
-                    console.error('Error loading user data:', e);
-                    localStorage.removeItem('tutorup_currentUser');
-                }
-            }
+            // Set theme
+            updateTheme();
 
             // Event listeners
             loginBtn.addEventListener('click', handleLogin);
-            logoutBtn.addEventListener('click', handleLogout);
-            themeToggle.addEventListener('click', toggleTheme);
-            chatInput.addEventListener('input', handleInputChange);
-            chatInput.addEventListener('keydown', handleKeyDown);
-            sendBtn.addEventListener('click', sendMessage);
-            uploadBtn.addEventListener('click', handleUpload);
+            usernameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
             
-            // Enable Enter key for login
-            emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
-            passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+            // Chat page event listeners
+            chatInput.addEventListener('input', toggleSendButton);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (!sendBtn.disabled) handleSendMessage();
+                }
+            });
+            sendBtn.addEventListener('click', handleSendMessage);
+            themeToggle.addEventListener('click', toggleTheme);
+            logoutBtn.addEventListener('click', handleLogout);
+            uploadBtn.addEventListener('click', showUploadModal);
+            fileInput.addEventListener('change', handleFileSelect);
+            confirmUpload.addEventListener('click', handleFileUpload);
+            cancelUpload.addEventListener('click', hideUploadModal);
+            modalClose.addEventListener('click', hideUploadModal);
+            
+            // Close modal when clicking outside
+            uploadModal.addEventListener('click', (e) => {
+                if (e.target === uploadModal) hideUploadModal();
+            });
         }
 
-        // Authentication functions
+        // Login function - fixed for MIT App compatibility
         function handleLogin() {
-            const email = emailInput.value;
-            const password = passwordInput.value;
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
 
-            if (!email || !password) {
-                showAlert('Please enter both email and password');
+            // Simple validation
+            if (!username || !password) {
+                showAlert('Please enter both username and password');
                 return;
             }
 
+            // Show loading state
             loginBtn.disabled = true;
             loginLoader.style.display = 'block';
             loginBtn.querySelector('span').textContent = 'Logging in...';
 
-            // Simulate login process (replace with actual Firebase auth if configured correctly)
+            // Simulate API call with timeout
             setTimeout(() => {
-                // For demo purposes, we'll accept any non-empty email and password
-                if (email && password) {
-                    // Create a simple user object
-                    currentUser = {
-                        uid: email.replace(/[^a-zA-Z0-9]/g, '_'),
-                        email: email,
-                        displayName: email.split('@')[0]
-                    };
-                    
-                    // Save to localStorage
-                    localStorage.setItem('tutorup_currentUser', JSON.stringify(currentUser));
-                    
-                    // Show chat page
-                    loginPage.style.display = 'none';
-                    chatPage.style.display = 'flex';
-                    loadChatHistory();
-                    checkTokenUsage();
+                // For demo purposes, accept any non-empty credentials
+                if (username && password) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    showChatPage();
                 } else {
-                    showAlert('Please enter valid credentials');
+                    showAlert('Invalid credentials. Please try again.');
                 }
                 
+                // Reset login button
                 loginBtn.disabled = false;
                 loginLoader.style.display = 'none';
-                loginBtn.querySelector('span').textContent = 'Login';
-            }, 1000);
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('tutorup_currentUser');
-            currentUser = null;
-            loginPage.style.display = 'flex';
-            chatPage.style.display = 'none';
-            emailInput.value = '';
-            passwordInput.value = '';
+                loginBtn.querySelector('span').textContent = 'Log In';
+            }, 1500);
         }
 
         function showAlert(message) {
             loginAlert.textContent = message;
             loginAlert.style.display = 'block';
+            
+            // Hide alert after 3 seconds
             setTimeout(() => {
                 loginAlert.style.display = 'none';
-            }, 5000);
+            }, 3000);
         }
 
-        // Theme functions
-        function toggleTheme() {
-            isDarkTheme = !isDarkTheme;
-            if (isDarkTheme) {
-                document.body.classList.add('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.setItem('theme', 'light');
-            }
+        function showChatPage() {
+            loginPage.style.display = 'none';
+            chatPage.style.display = 'flex';
         }
 
-        // Chat functions
-        function handleInputChange() {
+        function toggleSendButton() {
+            sendBtn.disabled = chatInput.value.trim() === '';
+            
             // Auto-resize textarea
             chatInput.style.height = 'auto';
             chatInput.style.height = Math.min(chatInput.scrollHeight, 150) + 'px';
-            
-            // Enable/disable send button
-            sendBtn.disabled = chatInput.value.trim() === '';
         }
 
-        function handleKeyDown(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        }
+        // Handle sending messages with short answer first
+        async function handleSendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
 
-        function addMessage(sender, content) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message message-${sender}`;
+            // Add user message to chat
+            addMessageToChat('user', message);
+            chatInput.value = '';
+            toggleSendButton();
             
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'message-content';
-            
-            if (sender === 'ai') {
-                contentDiv.innerHTML = marked.parse(content);
-                
-                // Add copy buttons to code blocks
-                setTimeout(() => {
-                    const codeBlocks = contentDiv.querySelectorAll('pre');
-                    codeBlocks.forEach(block => {
-                        const copyBtn = document.createElement('button');
-                        copyBtn.className = 'copy-btn';
-                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
-                        copyBtn.addEventListener('click', () => {
-                            const text = block.querySelector('code').innerText;
-                            navigator.clipboard.writeText(text);
-                            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                            setTimeout(() => {
-                                copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
-                            }, 2000);
-                        });
-                        block.appendChild(copyBtn);
-                    });
-                    
-                    // Render math with KaTeX
-                    renderMathInElement(contentDiv, {
-                        delimiters: [
-                            {left: '$$', right: '$$', display: true},
-                            {left: '$', right: '$', display: false},
-                            {left: '\\(', right: '\\)', display: false},
-                            {left: '\\[', right: '\\]', display: true}
-                        ]
-                    });
-                    
-                    // Apply syntax highlighting
-                    contentDiv.querySelectorAll('pre code').forEach(block => {
-                        hljs.highlightElement(block);
-                    });
-                }, 0);
-            } else {
-                contentDiv.textContent = content;
-            }
-            
-            messageDiv.appendChild(contentDiv);
-            chatMessages.appendChild(messageDiv);
-            
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            // Save chat history
-            saveChatHistory();
-        }
-
-        function showTypingIndicator() {
-            const indicatorDiv = document.createElement('div');
-            indicatorDiv.className = 'message message-ai';
-            indicatorDiv.id = 'typing-indicator';
-            
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'typing-indicator';
-            contentDiv.innerHTML = `
-                <span>Typing...</span>
+            // Show typing indicator
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <span>AI is thinking</span>
                 <div class="typing-dot"></div>
                 <div class="typing-dot"></div>
                 <div class="typing-dot"></div>
             `;
-            
-            indicatorDiv.appendChild(contentDiv);
-            chatMessages.appendChild(indicatorDiv);
-            
-            // Scroll to bottom
+            chatMessages.appendChild(typingIndicator);
             chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function removeTypingIndicator() {
-            const indicator = document.getElementById('typing-indicator');
-            if (indicator) {
-                indicator.remove();
-            }
-        }
-
-        async function sendMessage() {
-            const message = chatInput.value.trim();
-            if (!message) return;
-            
-            // Check token limit
-            if (tokenUsage >= MONTHLY_TOKEN_LIMIT) {
-                showTokenLimitNotification();
-                return;
-            }
-
-            // Clear input and disable send button
-            chatInput.value = '';
-            chatInput.style.height = 'auto';
-            sendBtn.disabled = true;
-
-            // Add user message to chat
-            addMessage('user', message);
-
-            // Show typing indicator
-            showTypingIndicator();
 
             try {
-                // Check if user is asking about identity
-                const userMessage = message.toLowerCase();
-                const identityQuestions = ['who are you', 'what are you', 'your name', 'which model', 'what model', 'are you chatgpt', 'are you gemini'];
-                
-                if (identityQuestions.some(q => userMessage.includes(q))) {
-                    // Remove typing indicator
-                    removeTypingIndicator();
-                    
-                    // Add identity response
-                    addMessage('ai', "I'm your personal AI Tutor powered by TutorUp-Dilshad");
-                    
-                    // Update token usage
-                    tokenUsage++;
-                    updateTokenUsage();
-                    
-                    return;
-                }
-
-                // Send message to Gemini backend
-                const response = await fetch('/api/gemini', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        prompt: message,
-                        userId: currentUser.uid 
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Server error');
-                }
-
-                const data = await response.json();
+                // Simulate API call to get response
+                const response = await getAIResponse(message);
                 
                 // Remove typing indicator
-                removeTypingIndicator();
+                chatMessages.removeChild(typingIndicator);
                 
-                if (data.success) {
-                    // Add AI response to chat
-                    addMessage('ai', data.text);
-                    
-                    // Update token usage
-                    tokenUsage++;
-                    updateTokenUsage();
-                } else {
-                    throw new Error('API error');
-                }
+                // Add AI response to chat with short answer first
+                addAIResponseToChat(response);
             } catch (error) {
                 // Remove typing indicator
-                removeTypingIndicator();
+                chatMessages.removeChild(typingIndicator);
                 
                 // Show error message
-                addMessage('ai', 'Error connecting to server. Please try again later.');
+                addMessageToChat('ai', 'Sorry, I encountered an error. Please try again.');
                 console.error('Error:', error);
             }
         }
 
-        function handleUpload() {
-            // File upload functionality would go here
-            alert('File upload functionality would be implemented here');
+        // Simulate getting AI response with short and detailed answers
+        async function getAIResponse(message) {
+            // In a real implementation, this would be an API call to your backend
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Generate a short answer
+                    const shortAnswer = `Based on your question about "${message}", the key concept is understanding the fundamental principles.`;
+                    
+                    // Generate a more detailed explanation
+                    const detailedAnswer = `
+${shortAnswer}
+
+To elaborate further, this topic involves several important aspects:
+
+1. **Core Principles**: The foundation rests on established theories that have been validated through research and experimentation.
+
+2. **Practical Applications**: These concepts are applied in various real-world scenarios, from everyday problem-solving to advanced technological innovations.
+
+3. **Common Misconceptions**: Many learners initially struggle with distinguishing between related but distinct concepts in this area.
+
+Would you like me to explain any specific aspect in more detail?
+                    `;
+                    
+                    resolve({
+                        short: shortAnswer,
+                        detailed: detailedAnswer
+                    });
+                }, 2000);
+            });
         }
 
-        // Chat history functions
-        function saveChatHistory() {
-            if (!currentUser) return;
+        function addMessageToChat(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${role}`;
             
-            const messages = [];
-            const messageElements = chatMessages.querySelectorAll('.message');
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
             
-            messageElements.forEach(msg => {
-                const sender = msg.classList.contains('message-user') ? 'user' : 'ai';
-                const content = msg.querySelector('.message-content').textContent;
-                messages.push({ sender, content });
+            // Use marked to parse markdown
+            messageContent.innerHTML = marked.parse(content);
+            
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            
+            // Apply syntax highlighting to code blocks
+            messageDiv.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+                
+                // Add copy button to code blocks
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-btn';
+                copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                copyButton.addEventListener('click', () => {
+                    navigator.clipboard.writeText(block.textContent)
+                        .then(() => {
+                            copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            setTimeout(() => {
+                                copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            console.error('Failed to copy: ', err);
+                        });
+                });
+                
+                block.parentNode.appendChild(copyButton);
             });
             
-            localStorage.setItem(`chatHistory_${currentUser.uid}`, JSON.stringify(messages));
-        }
-
-        function loadChatHistory() {
-            if (!currentUser) return;
+            // Render any math expressions
+            renderMathInElement(messageContent, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
             
-            const savedHistory = localStorage.getItem(`chatHistory_${currentUser.uid}`);
-            if (savedHistory) {
-                try {
-                    const messages = JSON.parse(savedHistory);
-                    chatMessages.innerHTML = '';
-                    
-                    messages.forEach(msg => {
-                        addMessage(msg.sender, msg.content);
-                    });
-                } catch (e) {
-                    console.error('Error loading chat history:', e);
-                    // Start with a welcome message if history is corrupted
-                    addMessage('ai', 'Hello! I\'m TutorUp AI, your personal tutor. How can I help you learn today?');
-                }
-            } else {
-                // Start with a welcome message if no history exists
-                addMessage('ai', 'Hello! I\'m TutorUp AI, your personal tutor. How can I help you learn today?');
-            }
-        }
-
-        // Token usage functions
-        function checkTokenUsage() {
-            if (!currentUser) return;
-            
-            // Get current month and year
-            const now = new Date();
-            const monthYear = `${now.getMonth() + 1}-${now.getFullYear()}`;
-            
-            // Get token usage from localStorage
-            const tokenData = localStorage.getItem(`tokenUsage_${currentUser.uid}_${monthYear}`);
-            
-            if (tokenData) {
-                tokenUsage = parseInt(tokenData);
-                
-                // Show notification if limit reached
-                if (tokenUsage >= MONTHLY_TOKEN_LIMIT) {
-                    showTokenLimitNotification();
-                }
-            } else {
-                tokenUsage = 0;
-            }
-        }
-
-        function updateTokenUsage() {
-            if (!currentUser) return;
-            
-            // Get current month and year
-            const now = new Date();
-            const monthYear = `${now.getMonth() + 1}-${now.getFullYear()}`;
-            
-            // Save token usage to localStorage
-            localStorage.setItem(`tokenUsage_${currentUser.uid}_${monthYear}`, tokenUsage);
-            
-            // Check if limit reached
-            if (tokenUsage >= MONTHLY_TOKEN_LIMIT) {
-                showTokenLimitNotification();
-            }
-        }
-
-        function showTokenLimitNotification() {
-            // Remove any existing notification
-            const existingNotification = document.querySelector('.token-limit-notification');
-            if (existingNotification) {
-                existingNotification.remove();
-            }
-            
-            // Create notification
-            const notification = document.createElement('div');
-            notification.className = 'token-limit-notification';
-            notification.textContent = 'Monthly token limit reached.';
-            
-            // Add to chat
-            chatMessages.appendChild(notification);
-            
-            // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
+            messageHistory.push({ role, content });
         }
 
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initApp);
+        // Add AI response with short answer first and option to expand
+        function addAIResponseToChat(response) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message message-ai';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            
+            // Add short answer
+            messageContent.innerHTML = marked.parse(response.short);
+            
+            // Add toggle for detailed answer
+            const toggle = document.createElement('div');
+            toggle.className = 'detailed-toggle';
+            toggle.innerHTML = 'Show detailed explanation';
+            toggle.addEventListener('click', () => {
+                if (messageContent.innerHTML.includes(response.detailed)) {
+                    // Already showing detailed, collapse to short
+                    messageContent.innerHTML = marked.parse(response.short);
+                    toggle.innerHTML = 'Show detailed explanation';
+                } else {
+                    // Show detailed answer
+                    messageContent.innerHTML = marked.parse(response.detailed);
+                    toggle.innerHTML = 'Show less';
+                }
+                
+                // Re-apply syntax highlighting and math rendering
+                messageContent.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+                
+                renderMathInElement(messageContent, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            });
+            
+            messageContent.appendChild(toggle);
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            
+            // Apply syntax highlighting
+            messageDiv.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+            
+            // Render math expressions
+            renderMathInElement(messageContent, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            messageHistory.push({ role: 'ai', content: response.detailed });
+        }
+
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            localStorage.setItem('darkTheme', isDarkTheme);
+            updateTheme();
+        }
+
+        function updateTheme() {
+            if (isDarkTheme) {
+                document.body.classList.add('dark-theme');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.body.classList.remove('dark-theme');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('isLoggedIn');
+            chatPage.style.display = 'none';
+            loginPage.style.display = 'flex';
+            
+            // Clear chat
+            chatMessages.innerHTML = `
+                <div class="message message-ai">
+                    <div class="message-content">
+                        <p>Hello! I'm your AI tutor. How can I help you with your studies today?</p>
+                    </div>
+                </div>
+            `;
+            messageHistory = [];
+        }
+
+        function showUploadModal() {
+            uploadModal.style.display = 'flex';
+        }
+
+        function hideUploadModal() {
+            uploadModal.style.display = 'none';
+            // Reset file input
+            fileInput.value = '';
+            selectedFile.style.display = 'none';
+            confirmUpload.disabled = true;
+        }
+
+        function handleFileSelect() {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                fileName.textContent = file.name;
+                selectedFile.style.display = 'flex';
+                confirmUpload.disabled = false;
+            } else {
+                selectedFile.style.display = 'none';
+                confirmUpload.disabled = true;
+            }
+        }
+
+        function handleFileUpload() {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            // In a real implementation, you would upload the file to your server here
+            // For this demo, we'll just simulate a successful upload
+            addMessageToChat('user', `[Uploaded file: ${file.name}]`);
+            
+            // Simulate AI processing the file
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <span>AI is analyzing your file</span>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatMessages.appendChild(typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                chatMessages.removeChild(typingIndicator);
+                addMessageToChat('ai', `I've received your file "${file.name}". How would you like me to help you with this document?`);
+                hideUploadModal();
+            }, 2000);
+        }
+
+        // Initialize the app
+        init();
     </script>
 </body>
 </html>
