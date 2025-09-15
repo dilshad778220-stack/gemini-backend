@@ -102,9 +102,9 @@ app.post("/api/gemini", async (req, res) => {
       console.log("🔍 'detail' keyword detected, increasing token limit to 400");
     }
 
-    // Configure model
+    // Configure model - UPDATED TO GEMINI 2.0 PRO
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-pro", // Changed from "gemini-1.5-flash" to "gemini-2.0-pro"
       systemInstruction: SYSTEM_PROMPT,
     });
     
@@ -155,7 +155,7 @@ app.get("/api/test-gemini", async (req, res) => {
     if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === "demo-key") {
       return res.json({ success: false, message: "API key not set" });
     }
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" }); // Updated here too
     const result = await model.generateContent("Hello");
     const response = await result.response;
     const text = await response.text();
@@ -190,4 +190,3 @@ app.listen(port, () => {
   console.log(`🔧 Debug: http://localhost:${port}/api/debug`);
   console.log(`🧪 API Test: http://localhost:${port}/api/test-gemini`);
 });
-          
