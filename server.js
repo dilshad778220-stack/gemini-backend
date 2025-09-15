@@ -2,11 +2,19 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import admin from "firebase-admin";
+import serviceAccount from "./serviceAccountKey.json" assert { type: "json" };
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+// Initialize Firebase Admin
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+const db = admin.firestore();
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "demo-key");
@@ -15,6 +23,24 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "demo-key");
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
+
+// --- System Prompt ---
+const SYSTEM_PROMPT = `
+You are TutorUp AI, a helpful and friendly teacher.
+- Keep answers short (2–3 sentences, under 150 tokens).
+- If user says "explain in detail", allow longer answers (up to 400 tokens).
+- Use simple words and examples.
+- Prefer bullet points when useful.
+`;
+
+// --- Save message to Firestore ---
+async function saveMessage(uid, role, text) {
+  await db.collection("users").doc(uid).collection("chats").add({
+    role,
+    text,
+    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+  });
+}
 
 // --- Debug Endpoint ---
 app.get("/api/debug", (req, res) => {
@@ -30,66 +56,66 @@ app.get("/api/debug", (req, res) => {
 // --- Gemini AI Endpoint ---
 app.post("/api/gemini", async (req, res) => {
   try {
-    const { prompt } = req.body;
-
-    if (!prompt) return res.status(400).json({ success: false, message: "Prompt is required" });
+    const { prompt, uid } = req.body;
+    if (!prompt || !uid) return res.status(400).json({ success: false, message: "Prompt and UID required" });
 
     console.log("📩 Received prompt:", prompt);
 
-    // Check for demo mode
+    // Save user message
+    await saveMessage(uid, "user", prompt);
+
+    // Demo mode
     if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === "demo-key") {
-      console.log("🔶 Using demo mode - no valid API key");
       return res.json({
         success: true,
-        text: `I'm Gemini AI! You said: "${prompt}". Please set your GEMINI_API_KEY in the .env file to enable real AI responses.`,
+        text: `I'm Gemini AI! You said: "${prompt}". Please set your GEMINI_API_KEY in .env to get real AI responses.`,
         isDemo: true,
       });
     }
 
-    console.log("🔑 API Key detected, calling Gemini...");
-    console.log("API Key starts with:", process.env.GEMINI_API_KEY.substring(0, 10));
+    // Token limit based on "detail" keyword
+    let tokenLimit = 150;
+    if (prompt.toLowerCase().includes("detail")) tokenLimit = 400;
 
-    // Configure and call model
+    // Configure model
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.7,
         topK: 40,
         topP: 0.95,
+        maxOutputTokens: tokenLimit,
       },
     });
 
-    const result = await model.generateContent(prompt);
+    // Send prompt to Gemini
+    const result = await model.generateContent(`${SYSTEM_PROMPT}\nUser: ${prompt}`);
     const response = await result.response;
     const text = await response.text();
 
-    console.log("✅ Gemini API call successful");
+    // Save AI response
+    await saveMessage(uid, "assistant", text);
 
-    res.json({ success: true, text, isDemo: false });
+    res.json({ success: true, reply: text, isDemo: false });
   } catch (apiError) {
     console.error("❌ Gemini API Error:", apiError);
+    res.json({
+      success: false,
+      text: `Error generating response: ${apiError.message}`,
+      isDemo: true,
+    });
+  }
+});
 
-    // Build user-friendly error messages
-    let errorMessage = "API Error";
-    let userMessage = `I'm Gemini AI! You said: "${req.body.prompt}". `;
-
-    if (apiError.message.includes("API key") || apiError.message.includes("401")) {
-      errorMessage = "Invalid API key";
-      userMessage += "There's an issue with the API key. Please check your GEMINI_API_KEY in the .env file.";
-    } else if (apiError.message.includes("model") || apiError.message.includes("404")) {
-      errorMessage = "Model not found";
-      userMessage += "The AI model configuration needs to be updated.";
-    } else if (apiError.message.includes("quota") || apiError.message.includes("429")) {
-      errorMessage = "Quota exceeded";
-      userMessage += "The API quota has been exceeded. Check your Google Cloud usage.";
-    } else if (apiError.message.includes("permission") || apiError.message.includes("403")) {
-      errorMessage = "Permission denied";
-      userMessage += "API permission denied. Check your Google Cloud permissions.";
-    } else {
-      userMessage += `Technical issue: ${apiError.message}`;
-    }
-
-    res.json({ success: true, text: userMessage, isDemo: true, error: errorMessage });
+// --- Fetch User Chat History ---
+app.get("/api/history/:uid", async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const snapshot = await db.collection("users").doc(uid).collection("chats").orderBy("timestamp", "asc").get();
+    const history = snapshot.docs.map(doc => doc.data());
+    res.json({ success: true, history });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -129,13 +155,10 @@ app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
   const hasApiKey = !!(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "demo-key");
   if (hasApiKey) {
-    console.log(`✅ GEMINI_API_KEY is set`);
-    console.log(`🔑 Key starts with: ${process.env.GEMINI_API_KEY.substring(0, 10)}...`);
+    console.log(`✅ GEMINI_API_KEY is set (starts with: ${process.env.GEMINI_API_KEY.substring(0,10)}...)`);
   } else {
     console.log(`🔶 DEMO MODE - Set GEMINI_API_KEY in .env for real AI`);
-    console.log(`   Get key from: https://makersuite.google.com/`);
   }
-  console.log(`🌐 Open http://localhost:${port} in your browser`);
   console.log(`🔧 Debug: http://localhost:${port}/api/debug`);
   console.log(`🧪 API Test: http://localhost:${port}/api/test-gemini`);
 });
