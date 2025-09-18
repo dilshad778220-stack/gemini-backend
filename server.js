@@ -1,12 +1,16 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import admin from "firebase-admin";
-// Make sure your serviceAccountKey.json is in the same directory
-import serviceAccount from "./serviceAccountKey.json" assert { type: "json" };
+// server.js
 
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const admin = require("firebase-admin");
+
+// Load environment variables
 dotenv.config();
+
+// Import Firebase service account using CommonJS
+const serviceAccount = require("./serviceAccountKey.json");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -58,7 +62,7 @@ app.get("/api/debug", (req, res) => {
   });
 });
 
-// --- Gemini AI Endpoint (Corrected Version) ---
+// --- Gemini AI Endpoint ---
 app.post("/api/gemini", async (req, res) => {
   try {
     const { prompt, uid } = req.body;
@@ -72,7 +76,6 @@ app.post("/api/gemini", async (req, res) => {
     // Demo mode
     if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === "demo-key") {
       const demoResponse = `I'm Gemini AI! You said: "${prompt}". Please set your GEMINI_API_KEY in .env to get real AI responses.`;
-      // Also save the demo response to history
       await saveMessage(uid, "assistant", demoResponse);
       return res.json({
         success: true,
@@ -81,36 +84,25 @@ app.post("/api/gemini", async (req, res) => {
       });
     }
 
-    // 1. Fetch and Format Chat History
+    // Fetch chat history
     const chatHistorySnapshot = await db.collection("users").doc(uid).collection("chats").orderBy("timestamp", "asc").get();
     const history = chatHistorySnapshot.docs.map(doc => {
       const { role, text } = doc.data();
-      const geminiRole = role === "assistant" ? "model" : "user";
-      return {
-        role: geminiRole,
-        parts: [{ text }],
-      };
+      return { role: role === "assistant" ? "model" : "user", parts: [{ text }] };
     });
+    history.pop(); // remove current prompt
 
-    // Remove the most recent message from history, as it's the current prompt
-    history.pop();
+    // Token limit adjustment
+    let tokenLimit = prompt.toLowerCase().includes("detail") ? 400 : 200;
 
-    // 2. Adjust Token Limits
-    let tokenLimit = 200; // Default token limit
-    if (prompt.toLowerCase().includes("detail")) {
-      tokenLimit = 400;
-      console.log("🔍 'detail' keyword detected, increasing token limit to 400");
-    }
-
-    // Configure model - UPDATED TO GEMINI 2.0 PRO
+    // Configure Gemini model
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-pro", // Changed from "gemini-1.5-flash" to "gemini-2.0-pro"
+      model: "gemini-2.5-pro",
       systemInstruction: SYSTEM_PROMPT,
     });
-    
-    // 3. Use startChat() with history
+
     const chat = model.startChat({
-      history: history,
+      history,
       generationConfig: {
         maxOutputTokens: tokenLimit,
         temperature: 0.7,
@@ -120,10 +112,8 @@ app.post("/api/gemini", async (req, res) => {
     });
 
     const result = await chat.sendMessage(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const text = (await result.response).text();
 
-    // Save AI response
     await saveMessage(uid, "assistant", text);
 
     res.json({ success: true, reply: text, isDemo: false });
@@ -155,10 +145,9 @@ app.get("/api/test-gemini", async (req, res) => {
     if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === "demo-key") {
       return res.json({ success: false, message: "API key not set" });
     }
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" }); // Updated here too
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
     const result = await model.generateContent("Hello");
-    const response = await result.response;
-    const text = await response.text();
+    const text = (await result.response).text();
     res.json({ success: true, message: "Gemini API test successful", response: text });
   } catch (error) {
     res.json({ success: false, message: "Gemini API test failed", error: error.message });
@@ -182,11 +171,10 @@ app.get("/api/health", (req, res) => {
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
   const hasApiKey = !!(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "demo-key");
-  if (hasApiKey) {
-    console.log(`✅ GEMINI_API_KEY is set (starts with: ${process.env.GEMINI_API_KEY.substring(0,10)}...)`);
-  } else {
-    console.log(`🔶 DEMO MODE - Set GEMINI_API_KEY in .env for real AI`);
-  }
+  console.log(hasApiKey
+    ? `✅ GEMINI_API_KEY is set (starts with: ${process.env.GEMINI_API_KEY.substring(0,10)}...)`
+    : `🔶 DEMO MODE - Set GEMINI_API_KEY in .env for real AI`
+  );
   console.log(`🔧 Debug: http://localhost:${port}/api/debug`);
   console.log(`🧪 API Test: http://localhost:${port}/api/test-gemini`);
 });
