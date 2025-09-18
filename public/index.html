@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backend Chat Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f4f9;
+    }
+    #chat-box {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .msg {
+      margin: 5px 0;
+      padding: 8px 10px;
+      border-radius: 6px;
+      max-width: 70%;
+    }
+    .user {
+      background: #d1e7dd;
+      text-align: right;
+      margin-left: auto;
+    }
+    .server {
+      background: #f8d7da;
+      text-align: left;
+      margin-right: auto;
+    }
+    #input-area {
+      display: flex;
+    }
+    #message {
+      flex: 1;
+      padding: 8px;
+    }
+    button {
+      padding: 8px 12px;
+      border: none;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Chat with Server Test</h2>
+  <div id="chat-box"></div>
+  <div id="input-area">
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const messageInput = document.getElementById("message");
+
+    function addMessage(text, type) {
+      const msg = document.createElement("div");
+      msg.classList.add("msg", type);
+      msg.innerText = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const text = messageInput.value.trim();
+      if (!text) return;
+
+      addMessage("You: " + text, "user");
+      messageInput.value = "";
+
+      try {
+        const res = await fetch("https://gemini-backend-8yzp.onrender.com/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+
+        if (!res.ok) throw new Error("Server error " + res.status);
+        const data = await res.json();
+        addMessage("Server: " + (data.reply || JSON.stringify(data)), "server");
+      } catch (err) {
+        addMessage("Error: " + err.message, "server");
+      }
+    }
+  </script>
+</body>
+</html>
