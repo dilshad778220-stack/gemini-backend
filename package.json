@@ -1,7 +1,7 @@
 {
   "name": "gemini-backend",
   "version": "1.0.0",
-  "description": "TutorUp AI Backend without Gemini",
+  "description": "TutorUp AI Backend - Mobile-friendly Deployment",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
