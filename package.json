@@ -1,13 +1,12 @@
 {
   "name": "gemini-backend",
   "version": "1.0.0",
-  "description": "TutorUp AI Backend",
+  "description": "TutorUp AI Backend without Gemini",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "@google/generative-ai": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
