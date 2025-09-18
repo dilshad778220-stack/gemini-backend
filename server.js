@@ -8,17 +8,21 @@ const admin = require("firebase-admin");
 // Load environment variables
 dotenv.config();
 
-// Import Firebase service account using CommonJS
-const serviceAccount = require("./serviceAccountKey.json");
-
-const app = express();
-const port = process.env.PORT || 5000;
+// Load Firebase service account from environment variable
+if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+  console.error("❌ FIREBASE_SERVICE_ACCOUNT environment variable is not set!");
+  process.exit(1);
+}
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 // Initialize Firebase Admin
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 const db = admin.firestore();
+
+const app = express();
+const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -68,8 +72,23 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// --- Optional: Demo AI Response Endpoint ---
+app.post("/api/gemini", async (req, res) => {
+  const { prompt, uid } = req.body;
+  if (!prompt || !uid) return res.status(400).json({ success: false, message: "Prompt and UID required" });
+
+  // Save user message
+  await saveMessage(uid, "user", prompt);
+
+  // Demo AI reply
+  const demoReply = `Demo AI: You said "${prompt}". Replace with real AI integration later.`;
+  await saveMessage(uid, "assistant", demoReply);
+
+  res.json({ success: true, reply: demoReply, isDemo: true });
+});
+
 // --- Start Server ---
 app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
+  console.log(`🚀 Server running on port ${port}`);
   console.log(`🔧 Debug: http://localhost:${port}/api/debug`);
 });
